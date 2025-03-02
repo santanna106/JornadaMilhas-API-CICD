@@ -13,13 +13,11 @@ namespace JornadaMilhas.Integration.Test.API
 {
     public class JornadaMilhasWebApplicationFactory : WebApplicationFactory<Program>, IAsyncLifetime
     {
-        public JornadaMilhasContext Context { get; private set; }
+        public JornadaMilhasContext Context { get; private set; } = null;
 
-        private IServiceScope scope;
+        private IServiceScope scope = null;
 
-        private readonly MsSqlContainer _mssqlContainer = new MsSqlBuilder()
-     .WithImage("mcr.microsoft.com/mssql/server:2022-latest")
-     .Build();
+        private readonly MsSqlContainer _mssqlContainer = new MsSqlBuilder().Build();
 
 
 
