@@ -36,8 +36,9 @@ public class OfertaViagemConstrutor
         OfertaViagem oferta = new OfertaViagem(rota, periodo, preco);
 
         //assert
-        Assert.Contains("A oferta de viagem não possui rota ou período válidos.", oferta.Erros.Sumario);
-        Assert.False(oferta.EhValido);
+        //Assert.Contains("A oferta de viagem não possui rota ou período válidos.", oferta.Erros.Sumario);
+        //Assert.False(oferta.EhValido);
+        Assert.Fail("Erro");
     }
 
     [Fact]
