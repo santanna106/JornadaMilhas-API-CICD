@@ -7,20 +7,21 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.DependencyInjection.Extensions;
 using System.Net.Http.Headers;
 using System.Net.Http.Json;
+using Testcontainers.MsSql;
 
 namespace JornadaMilhas.Integration.Test.API
 {
-    public class JornadaMilhasWebApplicationFactory : WebApplicationFactory<Program>
+    public class JornadaMilhasWebApplicationFactory : WebApplicationFactory<Program>, IAsyncLifetime
     {
-        public JornadaMilhasContext Context { get; }
+        public JornadaMilhasContext Context { get; private set; }
 
         private IServiceScope scope;
 
-        public JornadaMilhasWebApplicationFactory()
-        {
-            this.scope = Services.CreateScope();
-            Context = scope.ServiceProvider.GetRequiredService<JornadaMilhasContext>();
-        }
+        private readonly MsSqlContainer _mssqlContainer = new MsSqlBuilder()
+     .WithImage("mcr.microsoft.com/mssql/server:2022-latest")
+     .Build();
+
+
 
         protected override void ConfigureWebHost(IWebHostBuilder builder)
         {
@@ -30,7 +31,7 @@ namespace JornadaMilhas.Integration.Test.API
                 services.AddDbContext<JornadaMilhasContext>(options =>
            options
            .UseLazyLoadingProxies()
-           .UseSqlServer("Server=localhost,11433;Database=JornadaMilhasV3;User Id=sa;Password=Alura#2024;Encrypt=false;TrustServerCertificate=true;MultipleActiveResultSets=true;"));
+           .UseSqlServer(_mssqlContainer.GetConnectionString()));
             });
 
             base.ConfigureWebHost(builder);
@@ -50,5 +51,19 @@ namespace JornadaMilhas.Integration.Test.API
 
             return client;
         }
+
+        public async Task InitializeAsync()
+        {
+            await _mssqlContainer.StartAsync();
+            this.scope = Services.CreateScope();
+            Context = scope.ServiceProvider.GetRequiredService<JornadaMilhasContext>();
+
+        }
+
+        async Task IAsyncLifetime.DisposeAsync()
+        {
+            await _mssqlContainer.DisposeAsync();
+        }
+
     }
 }

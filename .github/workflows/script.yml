@@ -19,6 +19,10 @@ jobs:
        #dotnet test ./test/JornadaMilhas.Unit.Test
       - name: Execução do teste de unidade 
         run: dotnet test ./test/JornadaMilhas.Unit.Test
+       #dotnet test ./test/JornadaMilhas.Integration.Test.API
+      - name: Testes Integração
+        run: dotnet test ./test/JornadaMilhas.Integration.Test.API 
        #dotnet publish ./src/JornadaMilhas.API
       - name: Publicando a API
-        run: dotnet publish ./src/JornadaMilhas.API     
+        run: dotnet publish ./src/JornadaMilhas.API
+    
