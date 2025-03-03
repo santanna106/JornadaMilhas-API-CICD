@@ -28,13 +28,13 @@ namespace JornadaMilhas.Integration.Test.API
                     .WithImage(
                         "mcr.microsoft.com/mssql/server:2022-latest"
                     )
-                    .WithPortBinding(1433, true)
+                    .WithPortBinding(0, 1433)
                     .Build();
             }
             else
             {
                 _mssqlContainer = new MsSqlBuilder()
-                    .WithPortBinding(1433, true)
+                    .WithPortBinding(0, 1433)
                     .Build();
             }
         }
