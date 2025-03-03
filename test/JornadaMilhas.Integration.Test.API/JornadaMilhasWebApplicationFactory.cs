@@ -7,6 +7,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.DependencyInjection.Extensions;
 using System.Net.Http.Headers;
 using System.Net.Http.Json;
+using System.Runtime.InteropServices;
 using Testcontainers.MsSql;
 
 namespace JornadaMilhas.Integration.Test.API
@@ -17,7 +18,26 @@ namespace JornadaMilhas.Integration.Test.API
 
         private IServiceScope scope = null;
 
-        private readonly MsSqlContainer _mssqlContainer = new MsSqlBuilder().Build();
+        private readonly MsSqlContainer _mssqlContainer;
+
+        public JornadaMilhasWebApplicationFactory()
+        {
+            if (RuntimeInformation.IsOSPlatform(OSPlatform.Linux))
+            {
+                _mssqlContainer = new MsSqlBuilder()
+                    .WithImage(
+                        "mcr.microsoft.com/mssql/server:2022-latest"
+                    )
+                    .WithPortBinding(1433, true)
+                    .Build();
+            }
+            else
+            {
+                _mssqlContainer = new MsSqlBuilder()
+                    .WithPortBinding(1433, true)
+                    .Build();
+            }
+        }
 
 
 
