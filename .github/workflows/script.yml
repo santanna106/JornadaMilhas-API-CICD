@@ -25,4 +25,7 @@ jobs:
        #dotnet publish ./src/JornadaMilhas.API
       - name: Publicando a API
         run: dotnet publish ./src/JornadaMilhas.API
+  env: 
+    TESTCONTAINERS_HOST_OVERRIDE: "host.docker.internal"
+    TESTCONTAINERS_RYUK_DISABLED: "true"
     
